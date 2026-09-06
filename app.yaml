@@ -32,8 +32,6 @@ automatic_scaling:
 # (see DEPLOYMENT.md). The placeholder below only shows the expected shape.
 env_variables:
   OPENAI_API_KEY: "REPLACE_WITH_YOUR_KEY_OR_USE_SECRET_MANAGER"
-  # Optional: which Streamlit app to run (app.py or app_with_memory.py)
-  STREAMLIT_APP: "app_with_memory.py"
 
 # Health checks - allow time for first-boot ingestion before healthy.
 readiness_check:

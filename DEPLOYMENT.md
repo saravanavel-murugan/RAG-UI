@@ -1,8 +1,8 @@
 # Deploying the HR RAG Chatbot (RAG-UI) to Google Cloud
 
 This is a Streamlit RAG chatbot (FAISS vector search + OpenAI `gpt-4o-mini`).
-The FAISS index (`hr_faiss_index`) is built from the PDFs in `documents/` and
-held **in memory (RAM)** at runtime by Streamlit's `@st.cache_resource`.
+The FAISS index (`hr_faiss_index`) is loaded **into memory (RAM)** at runtime by
+Streamlit's `@st.cache_resource`. **The Streamlit UI is the Docker entry point.**
 
 ## What to copy into the RAG-UI repo root
 
@@ -11,12 +11,19 @@ Copy every file from this `RAG-UI-deploy/` folder into the root of the
 
 | File               | Purpose                                                          |
 |--------------------|------------------------------------------------------------------|
-| `Dockerfile`       | Builds the container image                                       |
-| `entrypoint.sh`    | Runs ingestion if the index is missing, then starts Streamlit    |
+| `Dockerfile`       | Builds the image; runs Streamlit UI as the entry point           |
 | `app.yaml`         | App Engine Flexible config (custom runtime = Dockerfile)         |
 | `requirements.txt` | **Replaces** the repo's original (adds missing packages)         |
 | `.dockerignore`    | Keeps the image lean                                             |
 | `.gcloudignore`    | Excludes files from `gcloud` uploads                             |
+
+> **Prebuild the FAISS index.** Because Streamlit is the entry point, the
+> container does not run ingestion on its own. Before building the image, run
+> `python ingest.py` locally to create `hr_faiss_index/`, and make sure that
+> folder is included in the image (remove it from `.dockerignore`/`.gcloudignore`
+> if you want it copied in). Alternatively, uncomment `RUN python ingest.py` in
+> the Dockerfile to build it at image-build time (requires `OPENAI_API_KEY` as a
+> build arg).
 
 > The repo's original `requirements.txt` is missing `streamlit`,
 > `python-dotenv`, `pypdf`, and `langchain-classic` (imported by the code).

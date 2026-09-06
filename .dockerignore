@@ -9,8 +9,8 @@ env/
 # Secrets - never bake into the image
 .env
 
-# Rebuilt at container startup
-hr_faiss_index/
+# NOTE: hr_faiss_index/ is intentionally NOT ignored, so the prebuilt
+# FAISS index is copied into the image (Streamlit loads it at startup).
 
 # OS / editor junk
 .DS_Store

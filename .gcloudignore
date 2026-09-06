@@ -13,8 +13,8 @@ env/
 # Secrets
 .env
 
-# Rebuilt at container startup
-hr_faiss_index/
+# NOTE: hr_faiss_index/ is intentionally NOT ignored, so the prebuilt
+# FAISS index is uploaded and copied into the image.
 
 # OS
 .DS_Store
