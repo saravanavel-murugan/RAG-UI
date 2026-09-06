@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+env/
+
+# Secrets - never bake into the image
+.env
+
+# Rebuilt at container startup
+hr_faiss_index/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore

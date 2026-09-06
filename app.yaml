@@ -1,0 +1,56 @@
+# ─────────────────────────────────────────────────────────────
+# Google App Engine (Flexible) config for the HR RAG chatbot.
+#
+# Uses a custom runtime = the Dockerfile in the repo root.
+# App Engine FLEXIBLE is required (not Standard) because Streamlit
+# needs WebSockets and a long-running server process.
+#
+# Place this file in the ROOT of the RAG-UI repo.
+# Deploy:  gcloud app deploy app.yaml
+# ─────────────────────────────────────────────────────────────
+
+runtime: custom
+env: flex
+
+# RAG + FAISS index held in RAM. Increase memory_gb for larger doc sets.
+resources:
+  cpu: 1
+  memory_gb: 2
+  disk_size_gb: 10
+
+# Keep one instance warm so the FAISS index stays in memory and users
+# avoid the ingestion cold-start on each request.
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 3
+  cool_down_period_sec: 120
+  cpu_utilization:
+    target_utilization: 0.7
+
+# App environment variables.
+# SECURITY: do NOT commit a real OPENAI_API_KEY. Prefer Secret Manager
+# (see DEPLOYMENT.md). The placeholder below only shows the expected shape.
+env_variables:
+  OPENAI_API_KEY: "REPLACE_WITH_YOUR_KEY_OR_USE_SECRET_MANAGER"
+  # Optional: which Streamlit app to run (app.py or app_with_memory.py)
+  STREAMLIT_APP: "app_with_memory.py"
+
+# Health checks - allow time for first-boot ingestion before healthy.
+readiness_check:
+  path: "/_stcore/health"
+  check_interval_sec: 10
+  timeout_sec: 5
+  failure_threshold: 4
+  success_threshold: 2
+  app_start_timeout_sec: 600
+
+liveness_check:
+  path: "/_stcore/health"
+  check_interval_sec: 30
+  timeout_sec: 5
+  failure_threshold: 4
+  success_threshold: 2
+
+# Sticky sessions keep a user pinned to the instance holding their chat state.
+network:
+  session_affinity: true

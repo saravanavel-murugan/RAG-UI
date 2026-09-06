@@ -1,0 +1,21 @@
+# Files excluded from `gcloud` uploads.
+.gcloudignore
+.git/
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+
+# Rebuilt at container startup
+hr_faiss_index/
+
+# OS
+.DS_Store
+Thumbs.db

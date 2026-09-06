@@ -1,4 +1,13 @@
+# HR RAG Chatbot - dependencies
+# NOTE: this expands the repo's original requirements.txt to include every
+# package the code actually imports (streamlit, dotenv, pypdf, langchain-classic).
+
 langchain
 langchain-openai
 langchain-community
+langchain-classic
 faiss-cpu
+openai
+streamlit
+pypdf
+python-dotenv
